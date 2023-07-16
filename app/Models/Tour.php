@@ -11,6 +11,7 @@ class Tour extends Model
 {
     use HasFactory, HasUuids;
 
+    const PER_PAGE = 15;
     protected $fillable = [
         'travel_id',
         'name',
