@@ -53,4 +53,25 @@ class TourListTest extends TestCase
         $response->assertJsonCount(Tour::PER_PAGE, 'data');
         $response->assertJsonPath('meta.last_page', 2);
     }
+
+    public function test_tours_list_sort_by_starting_date_correctly()
+    {
+        $travel = Travel::factory()->create(['is_public' => true]);
+        $earlierTour = Tour::factory()->create([
+            'travel_id' => $travel->id,
+            'starting_date' => now(),
+            'ending_date' => now()->addDays(1),
+        ]);
+        $laterTour = Tour::factory()->create([
+            'travel_id' => $travel->id,
+            'starting_date' => now()->addDays(2),
+            'ending_date' => now()->addDays(3),
+        ]);
+
+        $response = $this->get('api/v1/travels/' . $travel->slug . '/tours');
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('data.0.id', $earlierTour->id);
+        $response->assertJsonPath('data.1.id', $laterTour->id);
+    }
 }
