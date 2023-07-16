@@ -15,6 +15,10 @@ class Travel extends Model
 
     protected $table = 'travels';
 
+    protected $casts = [
+        'is_public' => 'boolean',
+    ];
+
     protected $fillable = [
         'is_public',
         'slug',
@@ -32,15 +36,25 @@ class Travel extends Model
     {
         return [
             'slug' => [
-                'source' => 'title'
+                'source' => 'name'
             ]
         ];
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
     }
 
     public function numberOfNights(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => $attributes->number_of_days - 1,
+            get: fn($value, $attributes) => $attributes['number_of_days'] - 1,
         );
+    }
+
+    public function scopePublicTravels($q)
+    {
+        return $q->where('is_public', true);
     }
 }
