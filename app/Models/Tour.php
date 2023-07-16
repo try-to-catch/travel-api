@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Requests\TourListRequest;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,38 +29,38 @@ class Tour extends Model
         );
     }
 
-    public function scopePriceFilter($query)
+    public function scopePriceFilter($query, TourListRequest $request)
     {
         return $query
             ->when(
-                request()->priceFrom,
-                fn($query) => $query->where('price', '>=', request()->priceFrom * 100)
+                $request->priceFrom,
+                fn($query) => $query->where('price', '>=', $request->priceFrom * 100)
             )
             ->when(
-                request()->priceTo,
-                fn($query) => $query->where('price', '<=', request()->priceTo * 100)
+                $request->priceTo,
+                fn($query) => $query->where('price', '<=', $request->priceTo * 100)
             );
     }
 
-    public function scopeDateFilter($query)
+    public function scopeDateFilter($query, TourListRequest $request)
     {
         return $query
             ->when(
-                request()->dateFrom,
-                fn($query) => $query->where('starting_date', '>=', request()->dateFrom)
+                $request->dateFrom,
+                fn($query) => $query->where('starting_date', '>=', $request->dateFrom)
             )
             ->when(
-                request()->dateTo,
-                fn($query) => $query->where('starting_date', '<=', request()->dateTo)
+                $request->dateTo,
+                fn($query) => $query->where('starting_date', '<=', $request->dateTo)
             );
     }
 
-    public function scopeSort($query)
+    public function scopeSort($query, TourListRequest $request)
     {
         return $query
             ->when(
-                request()->sortBy,
-                fn($query) => $query->orderBy(request()->sortBy, request()->sortOrder ?? 'asc')
+                $request->sortBy,
+                fn($query) => $query->orderBy($request->sortBy, $request->sortOrder ?? 'asc')
             );
     }
 }
