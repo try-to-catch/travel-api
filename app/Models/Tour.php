@@ -28,5 +28,38 @@ class Tour extends Model
         );
     }
 
+    public function scopePriceFilter($query)
+    {
+        return $query
+            ->when(
+                request()->priceFrom,
+                fn($query) => $query->where('price', '>=', request()->priceFrom * 100)
+            )
+            ->when(
+                request()->priceTo,
+                fn($query) => $query->where('price', '<=', request()->priceTo * 100)
+            );
+    }
 
+    public function scopeDateFilter($query)
+    {
+        return $query
+            ->when(
+                request()->dateFrom,
+                fn($query) => $query->where('starting_date', '>=', request()->dateFrom)
+            )
+            ->when(
+                request()->dateTo,
+                fn($query) => $query->where('starting_date', '<=', request()->dateTo)
+            );
+    }
+
+    public function scopeSort($query)
+    {
+        return $query
+            ->when(
+                request()->sortBy,
+                fn($query) => $query->orderBy(request()->sortBy, request()->sortOrder ?? 'asc')
+            );
+    }
 }
