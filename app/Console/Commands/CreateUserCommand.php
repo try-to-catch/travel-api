@@ -11,8 +11,8 @@ use Illuminate\Validation\Rules\Password;
 
 class CreateUserCommand extends Command
 {
-    const FAILURE = -1;
-    const SUCCESS = 0;
+    public const FAILURE = -1;
+    public const SUCCESS = 0;
 
     /**
      * The name and signature of the console command.
