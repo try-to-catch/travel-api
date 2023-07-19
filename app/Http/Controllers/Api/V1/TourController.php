@@ -14,9 +14,7 @@ class TourController extends Controller
     public function index(Travel $travel, TourListRequest $request): AnonymousResourceCollection
     {
         $tours = $travel->tours()
-            ->priceFilter($request)
-            ->dateFilter($request)
-            ->sort($request)
+            ->filter($request, ['price', 'date', 'sort'])
             ->oldest('starting_date')
             ->paginate(Tour::PER_PAGE);
 
